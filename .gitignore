@@ -1,3 +1,8 @@
 .env
 .env.example
 *.db
+dagster_university/tmp*
+
+dagster_university/data/
+dagster_university/logs/
+dagster_university/storage/
