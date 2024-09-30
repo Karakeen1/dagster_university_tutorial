@@ -1,0 +1,35 @@
+# Use an official Python runtime as a parent image
+FROM python:3.10-slim
+
+# Install Dagster globally
+RUN pip install dagster
+
+# Set working directory in the container
+WORKDIR /opt/dagster
+
+# Create the Dagster project from an example and set up the environment
+RUN dagster project from-example --example project_dagster_university_start --name dagster_university
+
+# Switch to the newly created project directory
+WORKDIR /opt/dagster/dagster_university
+
+# Copy .env.example to .env and install dependencies
+RUN cp .env.example .env
+
+# Install dev dependencies in editable mode
+RUN pip install -e ".[dev]"
+
+# Set the working directory to the application directory
+WORKDIR /opt/dagster/dagster_university
+
+# Expose the port for Dagster UI
+EXPOSE 3000
+
+# Run Dagster in development mode
+ENTRYPOINT ["dagster", "dev", "-h", "0.0.0.0"]
+
+# Build:
+# docker build -f Dockerfile_dagster -t dagster_university_image .
+
+# Run 
+# docker run --name dagster_container -p 3000:3000 dagster_university_image

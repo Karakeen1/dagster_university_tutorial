@@ -1,0 +1,18 @@
+services:
+  dagster:
+    image: dagster_university_image  # Use the image you built
+    build:
+      context: .
+      dockerfile: Dockerfile_dagster  # Ensure this matches your Dockerfile's name
+    container_name: dagster_container
+    ports:
+      - "3000:3000"  # Exposing port 3000 for the Dagster web UI
+    volumes:
+      - ./dagster_university:/opt/dagster/dagster_university  # Mount the local project to the container
+    environment:
+      - DAGSTER_HOME=/opt/dagster/dagster_university  # Set any necessary environment variables
+    entrypoint: ["dagster", "dev", "-h", "0.0.0.0"]  # Ensure Dagster binds to 0.0.0.0 for access
+
+volumes:
+  dagster_volume:  # Define a named volume (if needed for persistence)
+
