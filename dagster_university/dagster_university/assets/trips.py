@@ -7,7 +7,8 @@ from ..partitions import monthly_partition
 
 
 @asset(
-    partitions_def=monthly_partition
+    partitions_def=monthly_partition,
+    group_name= "raw_files"
 )
 def taxi_trips_file(context: AssetExecutionContext) -> None:
     """
@@ -25,7 +26,7 @@ def taxi_trips_file(context: AssetExecutionContext) -> None:
 
 
 
-@asset
+@asset(group_name= "raw_files")
 def taxi_zones_file() -> None:
     """
     The raw CSV file for the taxi zones dataset. Sourced from the NYC Open Data portal.
@@ -41,6 +42,7 @@ def taxi_zones_file() -> None:
 @asset(
     deps=["taxi_trips_file"],
     partitions_def=monthly_partition,
+    group_name= "ingestion"
 )
 def taxi_trips(context: AssetExecutionContext, database: DuckDBResource) -> None:
     """
@@ -72,7 +74,8 @@ def taxi_trips(context: AssetExecutionContext, database: DuckDBResource) -> None
 
 
 @asset(
-    deps=["taxi_zones_file"]
+    deps=["taxi_zones_file"],
+    group_name= "ingestion"
 )
 def taxi_zones(database: DuckDBResource) -> None:
     sql_query = f"""
